@@ -1,0 +1,157 @@
+version: "3.9"
+
+services:
+  # =======================
+  # Discovery / Eureka
+  # =======================
+  discovery:
+    build: ./backend/discovery
+    container_name: discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - backend
+
+  # =======================
+  # API Gateway
+  # =======================
+  api-gateway:
+    build: ./backend/apiGateway
+    container_name: api-gateway
+    depends_on:
+      - discovery
+    ports:
+      - "9095:8080"
+    networks:
+      - backend
+
+  # =======================
+  # Auth Service
+  # =======================
+  auth-service:
+    build: ./backend/auth-service
+    container_name: auth-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:oracle:thin:@oracle-auth-db:1521/FREEPDB1
+      - SPRING_DATASOURCE_USERNAME=auth_user
+      - SPRING_DATASOURCE_PASSWORD=auth_password
+      - SPRING_REDIS_HOST=redis
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+    depends_on:
+      - oracle-auth-db
+      - redis
+      - discovery
+    ports:
+      - "8081:8081"
+    networks:
+      - backend
+
+  # =======================
+  # Project Service
+  # =======================
+  project-service:
+    build: ./backend/project_service
+    container_name: project-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:oracle:thin:@oracle-project-db:1521/FREEPDB1
+      - SPRING_DATASOURCE_USERNAME=project_user
+      - SPRING_DATASOURCE_PASSWORD=project_password
+      - SPRING_REDIS_HOST=redis
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+    depends_on:
+      - oracle-project-db
+      - redis
+      - discovery
+    ports:
+      - "8082:8082"
+    networks:
+      - backend
+
+  # =======================
+  # Oracle Databases
+  # =======================
+  oracle-auth-db:
+    image: container-registry.oracle.com/database/free:23.5.0.0
+    container_name: oracle-auth-db
+    environment:
+      - ORACLE_PWD=auth_password
+      - ORACLE_CHARACTERSET=AL32UTF8
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_auth_data:/opt/oracle/oradata
+    networks:
+      - backend
+
+  oracle-project-db:
+    image: container-registry.oracle.com/database/free:23.5.0.0
+    container_name: oracle-project-db
+    environment:
+      - ORACLE_PWD=project_password
+      - ORACLE_CHARACTERSET=AL32UTF8
+    ports:
+      - "1522:1521"
+    volumes:
+      - oracle_project_data:/opt/oracle/oradata
+    networks:
+      - backend
+
+  # =======================
+  # Redis
+  # =======================
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+  # =======================
+  # Observabilidad
+  # =======================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus-grafana/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - backend
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+
+  # =======================
+  # Frontend Angular (Shell)
+  # =======================
+  shell-app:
+    build: ./frontend/shell-app
+    container_name: shell-app
+    ports:
+      - "4200:80"
+    networks:
+      - backend
+    depends_on:
+      - api-gateway
+      - auth-service
+      - project-service
+
+# =======================
+# Redes y Volúmenes
+# =======================
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  oracle_auth_data:
+  oracle_project_data:
