@@ -1,0 +1,114 @@
+server:
+  port: 9095
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 10
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: api-gateway
+
+  data:
+    redis:
+      host: pruebatecnicatcc
+      port: 6379
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          httpclient:
+            pool:
+              max-connections: 200
+              acquire-timeout: 30000
+            connect-timeout: 10000
+            response-timeout: 20s
+          # Configuración global de CORS
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedOrigins:
+                  - "https://localhost:4200"
+                  - "https://localhost:4201"
+                  - "https://localhost:4202"
+                  - "https://tcc.campidev.com"
+
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders:
+                  - Authorization
+                  - Content-Type
+                  - X-Requested-With
+                  - Accept
+                  - Origin
+                allowCredentials: true
+
+          # Definición de rutas
+          routes:
+            - id: project-service
+              uri: lb://project-service
+              predicates:
+                - Path=/projects/**
+              filters:
+                - StripPrefix=1
+                - AddRequestHeader=X-Request-Source, Gateway
+                - name: CircuitBreaker
+                  args:
+                    name: projectsCircuitBreaker
+                    fallbackUri: forward:/fallback/projects
+
+            - id: auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/auth/**
+              filters:
+                - StripPrefix=1
+                - AddRequestHeader=X-Request-Source, Gateway
+                - RewritePath=/auth/(?<remaining>.*), /${remaining}
+                - name: RequestRateLimiter
+                  args:
+                    redis-rate-limiter.replenishRate: 5
+                    redis-rate-limiter.burstCapacity: 10
+                    key-resolver: "#{@ipKeyResolver}"
+
+
+          default-filters:
+            - RemoveRequestHeader=Cookie
+            - AddRequestHeader=X-Request-Foo, Bar
+            - AddResponseHeader=X-Response-Foo, Bar
+
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      projectsCircuitBreaker:
+        registerHealthIndicator: true
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
+    reactor.netty.http.server: DEBUG
+    org.springframework.web.reactive: DEBUG
+    com.netflix.discovery: DEBUG
+    org.springframework.cloud.netflix.eureka: DEBUG
+    org.springframework.cloud.loadbalancer: DEBUG
+
+timelimiter:
+  instances:
+    projectsCircuitBreaker:
+      timeout-duration: 5s

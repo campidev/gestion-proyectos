@@ -1,0 +1,44 @@
+<h1 mat-dialog-title>{{ data ? 'Editar Tarea' : 'Nueva Tarea' }}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="taskForm">
+    <mat-form-field class="w-100">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="title">
+    </mat-form-field>
+
+    <mat-form-field class="w-100">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+
+    <mat-form-field class="w-100">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="pendiente">Pendiente</mat-option>
+        <mat-option value="en progreso">En progreso</mat-option>
+        <mat-option value="completada">Completada</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="w-100">
+      <mat-label>Prioridad</mat-label>
+      <mat-select formControlName="priority">
+        <mat-option value="BAJA">Baja</mat-option>
+        <mat-option value="MEDIA">Media</mat-option>
+        <mat-option value="ALTA">Alta</mat-option>
+        <mat-option value="URGENTE">Urgente</mat-option>
+      </mat-select>
+    </mat-form-field>   
+
+    <mat-form-field class="w-100" appearance="outline">
+  <mat-label>Fecha de vencimiento</mat-label>
+  <input matInput [matDatepicker]="picker2" formControlName="dueDate">
+  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+  <mat-datepicker #picker2></mat-datepicker>
+</mat-form-field>   
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="save()">Guardar</button>
+</div>

@@ -1,0 +1,469 @@
+{
+	"$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+	"version": 1,
+	"newProjectRoot": "projects",
+	"projects": {
+		"shell-app": {
+			"projectType": "application",
+			"schematics": {},
+			"root": "projects/shell-app",
+			"sourceRoot": "projects/shell-app/src",
+			"prefix": "app",
+			"architect": {
+				"build": {
+					"builder": "ngx-build-plus:browser",
+					"options": {
+						"outputPath": "dist/shell-app",
+						"index": "projects/shell-app/src/index.html",
+						"polyfills": [
+							"zone.js"
+						],
+						"tsConfig": "projects/shell-app/tsconfig.app.json",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "projects/shell-app/public",
+								"output": "."
+							},"projects/shell-app/src/assets"
+						],
+						"styles": [
+						"node_modules/bootstrap/dist/css/bootstrap.min.css",
+						"@angular/material/prebuilt-themes/azure-blue.css",
+							"projects/shell-app/src/styles.css"
+						],
+						"scripts": [
+						"node_modules/jquery/dist/jquery.min.js",
+						"node_modules/popper.js/dist/umd/popper.min.js",
+						"node_modules/bootstrap/dist/js/bootstrap.min.js"
+						],
+						"main": "projects/shell-app/src/main.ts",
+						"extraWebpackConfig": "projects/shell-app/webpack.config.js",
+						"commonChunk": false
+					},
+					"configurations": {
+						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "500kB",
+									"maximumError": "1MB"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kB",
+									"maximumError": "4kB"
+								}
+							],
+							"outputHashing": "all",
+							"extraWebpackConfig": "projects/shell-app/webpack.prod.config.js"
+						},
+						"development": {
+							"optimization": false,
+							"extractLicenses": false,
+							"sourceMap": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "ngx-build-plus:dev-server",
+					"configurations": {
+						"production": {
+							"buildTarget": "shell-app:build:production",
+							"extraWebpackConfig": "projects/shell-app/webpack.prod.config.js"
+						},
+						"development": {
+							"buildTarget": "shell-app:build:development"
+						}
+					},
+					"defaultConfiguration": "development",
+					"options": {
+						"ssl": true,
+						"sslKey": "projects/shell-app/ssl/key.pem",
+						"sslCert": "projects/shell-app/ssl/cert.pem",
+						"port": 4200,
+						"publicHost": "https://localhost:4200",
+						"extraWebpackConfig": "projects/shell-app/webpack.config.js"
+					}
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n"
+				},
+				"test": {
+					"builder": "@angular-devkit/build-angular:karma",
+					"options": {
+						"polyfills": [
+							"zone.js",
+							"zone.js/testing"
+						],
+						"tsConfig": "projects/shell-app/tsconfig.spec.json",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "projects/shell-app/public"
+							}
+						],
+						"styles": [
+							"projects/shell-app/src/styles.css"
+						],
+						"scripts": []
+					}
+				}
+			}
+		},
+		"mfe-auth": {
+			"projectType": "application",
+			"schematics": {},
+			"root": "projects/mfe-auth",
+			"sourceRoot": "projects/mfe-auth/src",
+			"prefix": "app",
+			"architect": {
+				"build": {
+					"builder": "ngx-build-plus:browser",
+					"options": {
+						"outputPath": "dist/mfe-auth",
+						"index": "projects/mfe-auth/src/index.html",
+						"polyfills": [
+							"zone.js"
+						],
+						"tsConfig": "projects/mfe-auth/tsconfig.app.json",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "projects/mfe-auth/public",
+								"output": "."
+							}
+						],
+						"styles": [
+						"node_modules/bootstrap/dist/css/bootstrap.min.css",
+						"@angular/material/prebuilt-themes/azure-blue.css",
+							"projects/mfe-auth/src/styles.css"
+						],
+						"scripts": [
+						
+						"node_modules/jquery/dist/jquery.min.js",
+						"node_modules/popper.js/dist/umd/popper.min.js",
+						"node_modules/bootstrap/dist/js/bootstrap.min.js"
+						],
+						"main": "projects/mfe-auth/src/main.ts",
+						"extraWebpackConfig": "projects/mfe-auth/webpack.config.js",
+						"commonChunk": false
+					},
+					"configurations": {
+						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "500kB",
+									"maximumError": "1MB"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kB",
+									"maximumError": "4kB"
+								}
+							],
+							"outputHashing": "all",
+							"extraWebpackConfig": "projects/mfe-auth/webpack.prod.config.js"
+						},
+						"development": {
+							"optimization": false,
+							"extractLicenses": false,
+							"sourceMap": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "ngx-build-plus:dev-server",
+					"configurations": {
+						"production": {
+							"buildTarget": "mfe-auth:build:production",
+							"extraWebpackConfig": "projects/mfe-auth/webpack.prod.config.js"
+						},
+						"development": {
+							"buildTarget": "mfe-auth:build:development"
+						}
+					},
+					"defaultConfiguration": "development",
+					"options": {
+						"ssl": true,
+						"sslKey": "projects/mfe-auth/ssl/key.pem",
+						"sslCert": "projects/mfe-auth/ssl/cert.pem",
+						"port": 4201,
+						"publicHost": "https://localhost:4201",
+						"extraWebpackConfig": "projects/mfe-auth/webpack.config.js"
+					}
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n"
+				},
+				"test": {
+					"builder": "@angular-devkit/build-angular:karma",
+					"options": {
+						"polyfills": [
+							"zone.js",
+							"zone.js/testing"
+						],
+						"tsConfig": "projects/mfe-auth/tsconfig.spec.json",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "projects/mfe-auth/public"
+							}
+						],
+						"styles": [
+							"projects/mfe-auth/src/styles.css"
+						],
+						"scripts": []
+					}
+				}
+			}
+		},
+		"mfe-project": {
+			"projectType": "application",
+			"schematics": {},
+			"root": "projects/mfe-project",
+			"sourceRoot": "projects/mfe-project/src",
+			"prefix": "app",
+			"architect": {
+				"build": {
+					"builder": "ngx-build-plus:browser",
+					"options": {
+						"outputPath": "dist/mfe-project",
+						"index": "projects/mfe-project/src/index.html",
+						"polyfills": [
+							"zone.js"
+						],
+						"tsConfig": "projects/mfe-project/tsconfig.app.json",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "projects/mfe-project/public",
+								"output": "."
+							}
+						],
+						"styles": [
+							"node_modules/bootstrap/dist/css/bootstrap.min.css",
+							"@angular/material/prebuilt-themes/azure-blue.css",
+							"projects/mfe-project/src/styles.css"
+						],
+						"scripts": [
+						"node_modules/jquery/dist/jquery.min.js",
+						"node_modules/popper.js/dist/umd/popper.min.js",
+						"node_modules/bootstrap/dist/js/bootstrap.min.js"
+						],
+						"main": "projects/mfe-project/src/main.ts",
+						"extraWebpackConfig": "projects/mfe-project/webpack.config.js",
+						"commonChunk": false
+					},
+					"configurations": {
+						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "500kB",
+									"maximumError": "1MB"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kB",
+									"maximumError": "4kB"
+								}
+							],
+							"outputHashing": "all",
+							"extraWebpackConfig": "projects/mfe-project/webpack.prod.config.js"
+						},
+						"development": {
+							"optimization": false,
+							"extractLicenses": false,
+							"sourceMap": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "ngx-build-plus:dev-server",
+					"configurations": {
+						"production": {
+							"buildTarget": "mfe-project:build:production",
+							"extraWebpackConfig": "projects/mfe-project/webpack.prod.config.js"
+						},
+						"development": {
+							"buildTarget": "mfe-project:build:development"
+						}
+					},
+					"defaultConfiguration": "development",
+					"options": {
+						"ssl": true,
+						"sslKey": "projects/mfe-project/ssl/key.pem",
+						"sslCert": "projects/mfe-project/ssl/cert.pem",
+						"port": 4202,
+						"publicHost": "https://localhost:4202",
+						"extraWebpackConfig": "projects/mfe-project/webpack.config.js"
+					}
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n"
+				},
+				"test": {
+					"builder": "@angular-devkit/build-angular:karma",
+					"options": {
+						"polyfills": [
+							"zone.js",
+							"zone.js/testing"
+						],
+						"tsConfig": "projects/mfe-project/tsconfig.spec.json",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "projects/mfe-project/public"
+							}
+						],
+						"styles": [
+							"projects/mfe-project/src/styles.css"
+						],
+						"scripts": []
+					}
+				}
+			}
+		},
+		"mfe-analytics": {
+			"projectType": "application",
+			"schematics": {},
+			"root": "projects/mfe-analytics",
+			"sourceRoot": "projects/mfe-analytics/src",
+			"prefix": "app",
+			"architect": {
+				"build": {
+					"builder": "ngx-build-plus:browser",
+					"options": {
+						"outputPath": "dist/mfe-analytics",
+						"index": "projects/mfe-analytics/src/index.html",
+						"polyfills": [
+							"zone.js"
+						],
+						"tsConfig": "projects/mfe-analytics/tsconfig.app.json",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "projects/mfe-analytics/public",
+								"output": "."
+							}
+						],
+						"styles": [
+							"projects/mfe-analytics/src/styles.css"
+						],
+						"scripts": [],
+						"main": "projects/mfe-analytics/src/main.ts",
+						"extraWebpackConfig": "projects/mfe-analytics/webpack.config.js",
+						"commonChunk": false
+					},
+					"configurations": {
+						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "500kB",
+									"maximumError": "1MB"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kB",
+									"maximumError": "4kB"
+								}
+							],
+							"outputHashing": "all",
+							"extraWebpackConfig": "projects/mfe-analytics/webpack.prod.config.js"
+						},
+						"development": {
+							"optimization": false,
+							"extractLicenses": false,
+							"sourceMap": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "ngx-build-plus:dev-server",
+					"configurations": {
+						"production": {
+							"buildTarget": "mfe-analytics:build:production",
+							"extraWebpackConfig": "projects/mfe-analytics/webpack.prod.config.js"
+						},
+						"development": {
+							"buildTarget": "mfe-analytics:build:development"
+						}
+					},
+					"defaultConfiguration": "development",
+					"options": {
+						"ssl": true,
+						"sslKey": "projects/mfe-analytics/ssl/key.pem",
+						"sslCert": "projects/mfe-analytics/ssl/cert.pem",
+						"port": 4203,
+						"publicHost": "https://localhost:4203",
+						"extraWebpackConfig": "projects/mfe-analytics/webpack.config.js"
+					}
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n"
+				},
+				"test": {
+					"builder": "@angular-devkit/build-angular:karma",
+					"options": {
+						"polyfills": [
+							"zone.js",
+							"zone.js/testing"
+						],
+						"tsConfig": "projects/mfe-analytics/tsconfig.spec.json",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "projects/mfe-analytics/public"
+							}
+						],
+						"styles": [
+							"projects/mfe-analytics/src/styles.css"
+						],
+						"scripts": []
+					}
+				}
+			}
+    },
+    "shared-state": {
+      "projectType": "library",
+      "root": "projects/shared-state",
+      "sourceRoot": "projects/shared-state/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/shared-state/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/shared-state/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/shared-state/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/shared-state/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    }
+   
+   
+	}
+}

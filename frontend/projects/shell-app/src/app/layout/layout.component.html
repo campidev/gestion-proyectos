@@ -1,0 +1,129 @@
+<ng-container *ngIf="isLoggedIn()">
+  <mat-sidenav-container class="sidenav-container">
+    <!-- Sidebar -->
+    <mat-sidenav
+      #drawer
+      class="sidenav"
+      mode="side"
+      [opened]="isDesktop"
+      fixedInViewport
+    >
+      <mat-toolbar color="primary" class="sidenav-header">
+        <mat-icon>dashboard</mat-icon>
+        <span class="ml-2">Menú</span>
+      </mat-toolbar>
+
+      <mat-nav-list>
+        <a
+          mat-list-item
+          routerLink="/dashboard/projects/proyectos"
+          routerLinkActive="active-link"
+          *ngIf="hasRole(['ADMIN', 'PROJECT_MANAGER'])"
+        >
+          <mat-icon>work</mat-icon>
+          <span>Proyectos</span>
+        </a>
+        <a
+          mat-list-item
+          routerLink="/dashboard/projects/sprints"
+          routerLinkActive="active-link"
+          *ngIf="hasRole(['ADMIN', 'PROJECT_MANAGER'])"
+        >
+          <mat-icon>timeline</mat-icon>
+          <span>Sprints</span>
+        </a>
+        <a
+          mat-list-item
+          routerLink="/dashboard/projects/comentarios"
+          routerLinkActive="active-link"
+          *ngIf="hasRole(['ADMIN', 'PROJECT_MANAGER'])"
+        >
+          <mat-icon>comment</mat-icon>
+          <span>Comentarios</span>
+        </a>
+        <a
+          mat-list-item
+          routerLink="/dashboard/projects/tareas"
+          routerLinkActive="active-link"
+        >
+          <mat-icon>task</mat-icon>
+          <span>Tareas</span>
+        </a>
+        <a
+          mat-list-item
+          routerLink="/dashboard/projects/asignaciones"
+          routerLinkActive="active-link"
+          *ngIf="hasRole(['ADMIN', 'PROJECT_MANAGER'])"
+        >
+          <mat-icon>assignment_ind</mat-icon>
+          <span>Asignaciones</span>
+        </a>
+        <mat-nav-list>
+          <a
+            mat-list-item
+            routerLink="profile/profile"
+            routerLinkActive="active-link"
+          >
+            <mat-icon>supervised_user_circle</mat-icon>
+            <span>Mi perfil</span>
+          </a>
+        </mat-nav-list>
+      </mat-nav-list>
+      <mat-toolbar
+        color="primary"
+        class="sidenav-header"
+        *ngIf="hasRole(['ADMIN'])"
+      >
+        <mat-icon>https icon</mat-icon>
+        <span class="ml-2">Administración</span>
+      </mat-toolbar>
+      <mat-nav-list *ngIf="hasRole(['ADMIN'])">
+        <a
+          mat-list-item
+          routerLink="/dashboard/roles/roles"
+          routerLinkActive="active-link"
+        >
+          <mat-icon>security_icon</mat-icon>
+          <span>Roles</span>
+        </a>
+      </mat-nav-list>
+      <mat-nav-list *ngIf="hasRole(['ADMIN'])">
+        <a
+          mat-list-item
+          routerLink="/dashboard/roles/users"
+          routerLinkActive="active-link"
+        >
+          <mat-icon>supervisor_account</mat-icon>
+          <span>Usuarios</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <!-- Contenido principal -->
+    <mat-sidenav-content>
+      <mat-toolbar color="primary" class="top-toolbar">
+        <!-- Botón hamburguesa solo en móvil -->
+        <button mat-icon-button (click)="drawer.toggle()" class="d-md-none">
+          <mat-icon>menu</mat-icon>
+        </button>
+
+        <span class="app-title">Gestión Ágil</span>
+        <span class="spacer"></span>
+        <div *ngIf="name$ | async as name" class="mr-2">Hola, {{ name! }}</div>
+        <button mat-stroked-button color="accent" (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span class="d-none d-sm-inline">Cerrar sesión </span>
+        </button>
+      </mat-toolbar>
+
+      <div class="content p-3">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-container>
+
+<!-- Si no está logueado, solo muestra el login -->
+<ng-container *ngIf="!isLoggedIn()">
+  <router-outlet></router-outlet>
+</ng-container>

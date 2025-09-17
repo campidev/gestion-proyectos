@@ -1,0 +1,72 @@
+<!-- src/app/modules/login/login.component.html -->
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <mat-card class="p-4 shadow-lg rounded">
+        <h3 class="text-center mb-4">Iniciar Sesión</h3>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <!-- Username -->
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>Usuario</mat-label>
+            <input
+              matInput
+              placeholder="Ingrese su usuario"
+              formControlName="username"
+            />
+            <mat-error
+              *ngIf="
+                loginForm.get('username')?.invalid &&
+                loginForm.get('username')?.touched
+              "
+            >
+              El usuario es obligatorio.
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Password -->
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>Contraseña</mat-label>
+            <input
+              matInput
+              type="password"
+              placeholder="Ingrese su contraseña"
+              formControlName="password"
+            />
+            <mat-error
+              *ngIf="
+                loginForm.get('password')?.invalid &&
+                loginForm.get('password')?.touched
+              "
+            >
+              La contraseña es obligatoria.
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Botón -->
+          <button
+            mat-raised-button
+            color="primary"
+            class="w-100"
+            [disabled]="loading || loginForm.invalid"
+          >
+            {{ loading ? "Ingresando..." : "Ingresar" }}
+          </button>
+        </form>
+
+        <!-- Mensaje de error -->
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+          {{ errorMessage }}
+        </div>
+        <a routerLink="/auth/register" class="d-block mt-3 text-center">¿Aún no eres usuario? Regístrate aquí</a>
+        <a
+  href="javascript:void(0)"
+  (click)="openRecoverDialog()"
+  class="d-block mt-3 text-center"
+>
+  ¿Olvidaste tu contraseña?
+</a>
+      </mat-card>
+    </div>
+  </div>
+</div>

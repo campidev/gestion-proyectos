@@ -1,0 +1,145 @@
+<h2 class="mb-3">Gestión de Tareas</h2>
+
+<!-- Loader -->
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<!-- Barra de búsqueda y botón -->
+<div class="row mb-3">
+  <!-- Buscar -->
+  <div class="col-12 col-md-8 mb-2 mb-md-0">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Buscar tarea</mat-label>
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Escribe un título, estado o prioridad"
+      />
+    </mat-form-field>
+  </div>
+
+  <!-- Botón -->
+  <div
+    class="col-12 col-md-4 text-md-right text-center"
+    *ngIf="hasRole(['ADMIN', 'PROJECT_MANAGER'])"
+  >
+    <button mat-raised-button color="primary" (click)="openDialog()">
+      + Nueva Tarea
+    </button>
+  </div>
+</div>
+
+<!-- Tabla -->
+<div class="table-responsive mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-table w-100">
+    <!-- ID -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+      <td mat-cell *matCellDef="let t">{{ t.taskId }}</td>
+    </ng-container>
+
+    <!-- Título -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Título</th>
+      <td mat-cell *matCellDef="let t">{{ t.title }}</td>
+    </ng-container>
+
+    <!-- Estado -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+      <td mat-cell *matCellDef="let t">
+        <span class="badge badge-info">{{ t.status }}</span>
+      </td>
+    </ng-container>
+
+    <!-- Prioridad -->
+    <ng-container matColumnDef="priority">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Prioridad</th>
+      <td mat-cell *matCellDef="let t">{{ t.priority }}</td>
+    </ng-container>
+
+    <!-- Vencimiento -->
+    <ng-container matColumnDef="dueDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Vencimiento</th>
+      <td mat-cell *matCellDef="let t">{{ t.dueDate | date }}</td>
+    </ng-container>
+
+    <!-- Proyecto -->
+    <ng-container matColumnDef="projectId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Proyecto</th>
+      <td mat-cell *matCellDef="let t">{{ t.projectName }}</td>
+    </ng-container>
+
+    <!-- Sprint -->
+    <ng-container matColumnDef="sprintId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Sprint</th>
+      <td mat-cell *matCellDef="let t">{{ t.sprintName }}</td>
+    </ng-container>
+
+    <!-- Acciones -->
+   <ng-container matColumnDef="actions">
+  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+  <td mat-cell *matCellDef="let t" class="actions-cell">
+
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="openDialog(t)"
+      *ngIf="hasRole(['ADMIN', 'PROJECT_MANAGER'])"
+    >
+      <mat-icon>edit</mat-icon>
+      Editar
+    </button>
+
+    <button
+      mat-stroked-button
+      color="warn"
+      (click)="deleteTask(t.taskId!)"
+      *ngIf="hasRole(['ADMIN', 'PROJECT_MANAGER'])"
+    >
+      <mat-icon>delete</mat-icon>
+      Eliminar
+    </button>
+
+    <button
+      mat-stroked-button
+      color="info"
+      (click)="openCommentDialog(t.taskId)"
+    >
+      <mat-icon>plus_one</mat-icon>
+      Nuevo comentario
+    </button>
+
+    <button
+      mat-stroked-button
+      color="info"
+      (click)="goToComments(t.taskId)"
+    >
+      <mat-icon>chat</mat-icon>
+      Ver Comentarios
+    </button>
+
+    <button
+      mat-stroked-button
+      color="accent"
+      (click)="openTaskDialog(t.taskId)"
+      *ngIf="hasRole(['ADMIN', 'PROJECT_MANAGER'])"
+    >
+      <mat-icon>assignment_ind</mat-icon>
+      Asignar
+    </button>
+
+  </td>
+</ng-container>
+
+
+    <!-- Filas -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
+
+<!-- Paginador -->
+<mat-paginator
+  [pageSizeOptions]="[5, 10, 20]"
+  showFirstLastButtons
+></mat-paginator>

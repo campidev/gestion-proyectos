@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>{{ project.projectId ? 'Editar Proyecto' : 'Nuevo Proyecto' }}</h2>
+<div mat-dialog-content>
+  <form>
+    <mat-form-field appearance="fill" class="w-100 mb-3">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="project.name" name="name" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100 mb-3">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput [(ngModel)]="project.description" name="description"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100 mb-3">
+      <mat-label>Estado</mat-label>
+      <mat-select [(ngModel)]="project.status" name="status">
+        <mat-option value="EN_PROGRESO">En progreso</mat-option>
+        <mat-option value="FINALIZADO">Finalizado</mat-option>
+        <mat-option value="CANCELADO">Cancelado</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()">Guardar</button>
+</div>

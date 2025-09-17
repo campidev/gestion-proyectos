@@ -1,0 +1,86 @@
+<h2 class="mb-3">Gestión de Comentarios</h2>
+
+<!-- Loader opcional -->
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<!-- Barra de búsqueda y botón -->
+<div class="row mb-3">
+  <!-- Buscar -->
+  <div class="col-12 col-md-8 mb-2 mb-md-0">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Buscar comentario</mat-label>
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Escribe contenido, proyecto o usuario"
+      />
+    </mat-form-field>
+  </div>
+
+  
+</div>
+
+<!-- Tabla -->
+<div class="table-responsive mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-table w-100">
+    <!-- ID -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+      <td mat-cell *matCellDef="let c">{{ c.commentId }}</td>
+    </ng-container>
+
+    <!-- Contenido -->
+    <ng-container matColumnDef="content">
+      <th mat-header-cell *matHeaderCellDef>Contenido</th>
+      <td mat-cell *matCellDef="let c">{{ c.content }}</td>
+    </ng-container>
+
+    <!-- Proyecto -->
+    <ng-container matColumnDef="taskId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Tarea</th>
+      <td mat-cell *matCellDef="let c">{{ c.taskName }}</td>
+    </ng-container>
+
+    <!-- Usuario -->
+    <ng-container matColumnDef="userId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</th>
+      <td mat-cell *matCellDef="let c">{{ c.userName }}</td>
+    </ng-container>
+
+    <!-- Fecha -->
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+      <td mat-cell *matCellDef="let c">{{ c.createdAt | date:'short' }}</td>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="actions">
+  <th mat-header-cell *matHeaderCellDef>Acciones</th>
+  <td mat-cell *matCellDef="let c" class="actions-cell">
+   
+
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="deleteComment(c.commentId!)"
+      *ngIf="(username$ | async) === c.userName ||  hasRole(['ADMIN', 'PROJECT_MANAGER'])"
+    >
+      <mat-icon style="margin-right: 4px;">delete</mat-icon>
+      Eliminar
+    </button>
+
+  </td>
+</ng-container>
+
+
+    <!-- Filas -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
+
+<!-- Paginador -->
+<mat-paginator
+  [pageSizeOptions]="[5, 10, 20]"
+  showFirstLastButtons
+></mat-paginator>

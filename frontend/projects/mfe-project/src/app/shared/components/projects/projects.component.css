@@ -1,0 +1,31 @@
+.container {
+  max-width: 900px;
+}
+
+table {
+  font-size: 14px;
+}
+
+mat-form-field {
+  margin-top: 10px;
+}
+
+button {
+  margin-right: 5px;
+}
+
+.snackbar-success {
+  background-color: #4caf50; /* verde éxito */
+  color: white;
+}
+
+.snackbar-error {
+  background-color: #f44336; /* rojo error */
+  color: white;
+}
+
+.full-width-table {
+  width: 100% !important;
+  min-width: 100%;
+  table-layout: auto; /* asegura que las columnas se adapten */
+}

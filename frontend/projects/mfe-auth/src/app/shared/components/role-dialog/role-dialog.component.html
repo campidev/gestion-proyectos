@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>{{ role.id ? 'Editar Rol' : 'Nuevo Rol' }}</h2>
+<div mat-dialog-content>
+  <form>
+    <mat-form-field appearance="fill" class="w-100 mb-3">
+      <mat-label>Nombre del Rol</mat-label>
+      <input matInput [(ngModel)]="role.roleName" name="roleName" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100 mb-3">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput [(ngModel)]="role.description" name="description"></textarea>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()">Guardar</button>
+</div>
